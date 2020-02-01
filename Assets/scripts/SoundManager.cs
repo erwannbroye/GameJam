@@ -11,8 +11,8 @@ using System.Collections;
 
 
         [HeaderAttribute("Sound Settings :")] 
-        public float minPitchRange = .80f;
-        public float maxPitchRange = 1f;
+        public float minVolumeRange = .85f;
+        public float maxVolumeRange = 1f;
 
         void Start ()
         {
@@ -39,9 +39,9 @@ using System.Collections;
         public void RandomSfx(params AudioClip[] clips)
         {
             int index = Random.Range(0, clips.Length);
-            float randomPitch = Random.Range(minPitchRange, maxPitchRange);
+            float randomVolume = Random.Range(minVolumeRange, maxVolumeRange);
 
-            efxSource.pitch = randomPitch;
+            efxSource.volume = randomVolume;
             efxSource.clip = clips[index];
             efxSource.Play();
         }

@@ -9,6 +9,9 @@ public class IsometricPlayerMovementController : MonoBehaviour
     IsometricCharacterRenderer isoRenderer;
 
     Rigidbody2D rbody;
+    public Rigidbody2D firePoint;
+    public Camera cam;
+    Vector2 mousePos;
 
     void Start()
     {
@@ -29,5 +32,11 @@ public class IsometricPlayerMovementController : MonoBehaviour
         Vector2 newPos = currentPos + movement * Time.fixedDeltaTime;
         isoRenderer.SetDirection(movement);
         rbody.MovePosition(newPos);
+        firePoint.MovePosition(newPos);
+        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+
+        Vector2 lookDir = mousePos - rbody.position;
+        float angle = Mathf.Atan2(lookDir.y, lookDir.x) *  Mathf.Rad2Deg - 90f;
+        firePoint.rotation = angle;
     }
 }
