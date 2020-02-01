@@ -15,37 +15,58 @@ public class shooting : MonoBehaviour
     public float delta;
     public float cPrime;
     public Vector2 deltaV ;
+    float t ;
+    float T0;
+
+
+    public Level level;
+
+    bool canFire;
+
 
     public float bulletForce;
 
     private void Start() {
-        delta = rayon * 0.5f;
+        delta = rayon * 0.86602f;
         deltaV = new Vector2(delta, 0);
         cPrime = 2*rayon;
+        level = GetComponent<Level>();
+        T0 = Time.time;
+        canFire = true;
+
     }
-    void Update()
+    void FixedUpdate()
     {
+        float T = Time.time - T0;
+        rayon = level.range;
         playePos = transform.position;
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         mousePos2 = cam.ScreenToWorldPoint(Input.mousePosition);
-        if (Input.GetButtonUp("Fire1")) {
-            Shoot();
+        if (Input.GetButtonUp("Fire1") && canFire == true) {
+            for (int i = level.bulletNumber - 1; i >= 0; i --) {
+                Shoot(i);
+            }
+            canFire = false;
+            T0 = Time.time;
+            T = Time.time - T0;
         }
-        cursorPos.position = mousePos2;
+        if (T > level.reloadTime && canFire == false)
+            canFire = true;
         designPos();
     }
 
     void designPos() 
     {
+        cPrime = 2*rayon;
+        delta = rayon * 0.86602f;
         Vector2 Ca = playePos + deltaV;
         Vector2 Cb = playePos - deltaV;
         float x0 = (Ca.x + Cb.x) / 2;
         float y0 = (Ca.y + Cb.y) / 2;
-        float p1= (cPrime + (0.5f * (((Cb.x - Ca.x) * (Cb.x - Ca.x)) + ((Cb.y - Ca.y) * (Cb.y - Ca.y)))));
-        float p2 = (2 *(((mousePos2.x - x0) * (mousePos2.x - x0)) + ((mousePos2.y - y0) * (mousePos2.y - y0))));
+        float p1 = (cPrime);
+        float p2 = (((mousePos2.x - x0) * (mousePos2.x - x0)) + 2 *((mousePos2.y - y0) * (mousePos2.y - y0)));
 
-        float t = Mathf.Sqrt(p1 / p2);
-        // Debug.Log(t);
+        t = rayon * Mathf.Sqrt(p1 / p2);
         if (t > 1) {
             cursorPos.position = mousePos2;
         } else {
@@ -53,13 +74,10 @@ public class shooting : MonoBehaviour
         }
     }
 
-    void Shoot() {
+    void Shoot(int i) {
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Vector3 lookDir = (mousePos - firePoint.position).normalized;
-        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.AddForce(firePoint.up * bulletForce);
-        bullet.GetComponent<bullet>().targetPos = cursorPos.position;
-        Debug.Log("SHOOT");
-        Debug.Log(cursorPos.position);
+        bullet.GetComponent<bullet>().target = cursorPos.position + new Vector3(0.4f * i, 0, 0);
+        bullet.GetComponent<bullet>().origin = transform.position + new Vector3(0.4f * i, 0, 0);
+        bullet.GetComponent<bullet>().t = t;
     }
 }
