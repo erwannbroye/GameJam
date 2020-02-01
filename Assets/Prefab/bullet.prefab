@@ -93,7 +93,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.00000010430813, y: -0.011182081}
@@ -122,8 +122,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletForce: 10
-  origin: {fileID: 0}
-  target: {fileID: 122829320153247496, guid: 178f7285a055e10458687a27e4d22160, type: 3}
+  origin: {x: 0, y: 0, z: 0}
+  target: {x: 0, y: 0, z: 0}
   maxHeight: 10
   t: 0
   gravity: 8
