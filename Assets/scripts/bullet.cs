@@ -20,6 +20,7 @@ public class bullet : MonoBehaviour
     Animator animator;
     float T0;
     public bool isMoving;
+    public bool typeBullet;
     public float explosionRadius = 0.5f;
     
     public void init() 
@@ -51,14 +52,12 @@ public class bullet : MonoBehaviour
     void Update()
     {
         float T = Time.time - T0;
-        if (isMoving == false) {
-            Destroy(gameObject);
-        }
+
         if (T < D) {
-        float x = origin.x + V0x * T;
-        float y = origin.y + V0y * T - (0.5f * gravity * (T * T));
-        
-        transform.position = new Vector2(x, y);
+            float x = origin.x + V0x * T;
+            float y = origin.y + V0y * T - (0.5f * gravity * (T * T));
+            
+            transform.position = new Vector2(x, y);
 
         } else if (T > D) {
             if (animator) {
@@ -67,7 +66,6 @@ public class bullet : MonoBehaviour
             Destroy(gameObject, 0.24f);
             creatDamageZone(transform.position, explosionRadius);
             isMoving = false;
-            Debug.Log("destroy");
         }
     }
 
@@ -77,10 +75,14 @@ public class bullet : MonoBehaviour
             int i = 0;
             while (i < hitColliders.Length)
             {
-                if (hitColliders[i].gameObject.GetComponent<HitCannon>()) {
+                Debug.Log(hitColliders[i].tag);
+                if (hitColliders[i].gameObject.GetComponent<HitCannon>() && !hitColliders[i].isTrigger) {
                     hitColliders[i].gameObject.GetComponent<HitCannon>().TakeDamages(bulletDamge);
-                    if (bulletLevel >= 2)
+                    if (bulletLevel >= 2 && typeBullet == true)
                         hitColliders[i].gameObject.GetComponent<HitCannon>().TakeDamagesOvertime(3f,additionalDamage);
+                }
+                if (hitColliders[i].gameObject.GetComponentInParent<IsometricPlayerMovementController>()) {
+                    hitColliders[i].gameObject.GetComponentInParent<IsometricPlayerMovementController>().TakeDamages(bulletDamge);
                 }
                 i++; 
             }

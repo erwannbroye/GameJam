@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IsometricPlayerMovementController : MonoBehaviour
 {
@@ -13,7 +14,9 @@ public class IsometricPlayerMovementController : MonoBehaviour
     public Rigidbody2D firePoint;
     public Camera cam;
     Vector2 mousePos;
-
+    public float MaxHealth = 100f;
+    public float CurrentHealth = 100f;
+    public Image HealthBar;
     Level level;
 
     void Start()
@@ -23,7 +26,14 @@ public class IsometricPlayerMovementController : MonoBehaviour
         isoRenderer = GetComponentInChildren<IsometricCharacterRenderer>();
     }
 
-
+    public void TakeDamages (float damageTaken)
+    {
+        CurrentHealth -= damageTaken;
+        if(CurrentHealth <= 0)
+        {
+            CurrentHealth = 0;
+        }  
+    }
     // Update is called once per frame
     void Update()
     {
@@ -43,5 +53,12 @@ public class IsometricPlayerMovementController : MonoBehaviour
         Vector2 lookDir = mousePos - rbody.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) *  Mathf.Rad2Deg - 90f;
         firePoint.rotation = angle;
+        UpdateDisplay();
+
+    }
+
+        void UpdateDisplay()
+    {
+        HealthBar.fillAmount = CurrentHealth / MaxHealth;
     }
 }
