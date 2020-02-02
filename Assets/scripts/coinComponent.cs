@@ -21,7 +21,6 @@ public class coinComponent : MonoBehaviour
     {
         rayon = 100;
         mousePos2 = transform;
-        Debug.Log(transform.position);
         Vector3 tar = transform.position + new Vector3(1 + Random.Range(-2f, 2f), 1 + Random.Range(-2f, 2f), 0);
         test.target = tar;        
         test.origin = transform.position;

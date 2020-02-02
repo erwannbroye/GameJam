@@ -18,6 +18,7 @@ public class IaShoot : MonoBehaviour
 
     void Start()
     {
+        mousePos2.position = new Vector3(0, 0, 0);
         rayon = GetComponent<CircleCollider2D>().radius;
     }
 

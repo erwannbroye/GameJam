@@ -51,6 +51,9 @@ public class bullet : MonoBehaviour
     void Update()
     {
         float T = Time.time - T0;
+        if (isMoving == false) {
+            Destroy(gameObject);
+        }
         if (T < D) {
         float x = origin.x + V0x * T;
         float y = origin.y + V0y * T - (0.5f * gravity * (T * T));
@@ -61,21 +64,24 @@ public class bullet : MonoBehaviour
             if (animator) {
                 animator.Play("explosion1");
             }
-            creatDamageZone(transform.position, explosionRadius);
             Destroy(gameObject, 0.24f);
+            creatDamageZone(transform.position, explosionRadius);
             isMoving = false;
+            Debug.Log("destroy");
         }
     }
 
-    void creatDamageZone(Vector3 pos, float rad) 
+    void creatDamageZone(Vector2 pos, float rad) 
     {
-            Collider[] hitColliders = Physics.OverlapSphere(pos,rad);
+            Collider2D[] hitColliders = Physics2D.OverlapCircleAll(pos,rad);
             int i = 0;
             while (i < hitColliders.Length)
             {
-                hitColliders[i].gameObject.GetComponent<HitCannon>().TakeDamages(bulletDamge);
-                if (bulletLevel >= 2)
-                    hitColliders[i].gameObject.GetComponent<HitCannon>().TakeDamagesOvertime(3f,additionalDamage);
+                if (hitColliders[i].gameObject.GetComponent<HitCannon>()) {
+                    hitColliders[i].gameObject.GetComponent<HitCannon>().TakeDamages(bulletDamge);
+                    if (bulletLevel >= 2)
+                        hitColliders[i].gameObject.GetComponent<HitCannon>().TakeDamagesOvertime(3f,additionalDamage);
+                }
                 i++; 
             }
     }
