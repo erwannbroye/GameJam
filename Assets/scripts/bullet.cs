@@ -5,23 +5,27 @@ using UnityEngine;
 public class bullet : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float bulletForce;
+    public float bulletDamge = 10f;
+    public float additionalDamage = 20f;
+    public int bulletLevel = 0;
     public Vector3 origin;
     public Vector3 target;
     public float maxHeight = 10;
-    public float t;
+    public float t = 0;
     public float gravity = 10;
-    Rigidbody2D rb;
     Vector2 lookDir;
     float D;
     float V0x;
     float V0y;
     Animator animator;
     float T0;
+    public bool isMoving;
+    public float explosionRadius = 0.5f;
     
-    void Start()
+    public void init() 
     {
         maxHeight = 1;
+        isMoving = true;
         float heigth;
         if (t > 1)
             heigth = maxHeight + (1/t) * maxHeight;
@@ -31,11 +35,15 @@ public class bullet : MonoBehaviour
         D = 2 * Mathf.Sqrt(2 * heigth / gravity);
         V0x = (target.x - origin.x) / D;
         V0y = ((target.y - origin.y) / D) +  0.5f * gravity * D;
-        // bulletForce = 20;
-        rb = GetComponent<Rigidbody2D>();
-        // lookDir.x = 0;
-        // lookDir.y = 0;
         T0 = Time.time;
+        if (bulletLevel >= 1) {
+            explosionRadius *= 3;
+            bulletDamge *= 2;
+        }
+    }
+    void Start()
+    {
+        init();
         animator = GetComponent<Animator>();
     }
 
@@ -50,9 +58,25 @@ public class bullet : MonoBehaviour
         transform.position = new Vector2(x, y);
 
         } else if (T > D) {
-            animator.Play("explosion1");
+            if (animator) {
+                animator.Play("explosion1");
+            }
+            creatDamageZone(transform.position, explosionRadius);
             Destroy(gameObject, 0.24f);
+            isMoving = false;
         }
+    }
 
+    void creatDamageZone(Vector3 pos, float rad) 
+    {
+            Collider[] hitColliders = Physics.OverlapSphere(pos,rad);
+            int i = 0;
+            while (i < hitColliders.Length)
+            {
+                hitColliders[i].gameObject.GetComponent<HitCannon>().TakeDamages(bulletDamge);
+                if (bulletLevel >= 2)
+                    hitColliders[i].gameObject.GetComponent<HitCannon>().TakeDamagesOvertime(3f,additionalDamage);
+                i++; 
+            }
     }
 }

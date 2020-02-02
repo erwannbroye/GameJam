@@ -6,6 +6,10 @@ using System.Collections;
         [HeaderAttribute("File Settings :")]
         public AudioSource efxSource;
         public AudioSource musicSource;
+        public AudioClip [] efxClips;
+        public AudioClip [] musicClips;
+        public int musicNum;
+        public int efxNum;
         public static SoundManager instance = null;
 
 
@@ -23,16 +27,27 @@ using System.Collections;
             DontDestroyOnLoad (gameObject);
         }
 
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
+        void Update()
+        {
+            if (Input.GetButtonUp("Fire1")) {
+                PlaySfx(efxClips[efxNum]);
+            }
+            if (Input.GetButtonUp("Fire2")) {
+                PlayMusic(musicClips[musicNum]);
+            }
+        }
+
         public void PlayMusic(AudioClip clip)
         {
-            musicSource.clip = clip;
-            musicSource.Play ();
+            musicSource.PlayOneShot (clip, 1f);
         }
 
         public void PlaySfx(AudioClip clip)
         {
-            efxSource.clip = clip;
-            efxSource.Play ();
+            efxSource.PlayOneShot (clip, 1f);
         }
 
 

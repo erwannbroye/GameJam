@@ -9,7 +9,6 @@ public class shooting : MonoBehaviour
     public GameObject bulletPrefab;
     public Camera cam;
     public float rayon;
-    Vector3 mousePos;
     Vector2 mousePos2;
     Vector2 playePos;
     public float delta;
@@ -27,9 +26,7 @@ public class shooting : MonoBehaviour
     public float bulletForce;
 
     private void Start() {
-        delta = rayon * 0.86602f;
         deltaV = new Vector2(delta, 0);
-        cPrime = 2*rayon;
         level = GetComponent<Level>();
         T0 = Time.time;
         canFire = true;
@@ -40,7 +37,6 @@ public class shooting : MonoBehaviour
         float T = Time.time - T0;
         rayon = level.range;
         playePos = transform.position;
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         mousePos2 = cam.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetButtonUp("Fire1") && canFire == true) {
             for (int i = level.bulletNumber - 1; i >= 0; i --) {

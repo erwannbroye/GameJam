@@ -12,4 +12,7 @@ public class Level : MonoBehaviour
     public int bulletNumber = 1;
     public float range = 1;
     public float speed = 1;
+    public float damage = 10;
+    public float res = 10;
+    public int coin = 0;
 }
