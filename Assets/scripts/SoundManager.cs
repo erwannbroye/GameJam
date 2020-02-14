@@ -22,8 +22,6 @@ using System.Collections;
         {
             if (instance == null)
                 instance = this;
-            else if (instance != this)
-                Destroy (gameObject);
             DontDestroyOnLoad (gameObject);
         }
 
@@ -32,12 +30,6 @@ using System.Collections;
         /// </summary>
         void Update()
         {
-            if (Input.GetButtonUp("Fire1")) {
-                PlaySfx(efxClips[efxNum]);
-            }
-            if (Input.GetButtonUp("Fire2")) {
-                PlayMusic(musicClips[musicNum]);
-            }
         }
 
         public void PlayMusic(AudioClip clip)
@@ -45,9 +37,9 @@ using System.Collections;
             musicSource.PlayOneShot (clip, 1f);
         }
 
-        public void PlaySfx(AudioClip clip)
+        public void PlaySfx(int i)
         {
-            efxSource.PlayOneShot (clip, 1f);
+            efxSource.PlayOneShot (efxClips[i], 1f);
         }
 
 

@@ -22,6 +22,8 @@ public class bullet : MonoBehaviour
     public bool isMoving;
     public bool typeBullet;
     public float explosionRadius = 0.5f;
+    public AudioClip [] efxClips;
+
     
     public void init() 
     {
@@ -59,9 +61,12 @@ public class bullet : MonoBehaviour
             
             transform.position = new Vector2(x, y);
 
-        } else if (T > D) {
+        } else if (T > D && isMoving == true) {
             if (animator) {
                 animator.Play("explosion1");
+                int tmp = Mathf.RoundToInt(Random.Range(0, 1));
+                if (GetComponent<AudioSource>())
+                    GetComponent<AudioSource>().PlayOneShot(efxClips[tmp], 1.0f);
             }
             Destroy(gameObject, 0.24f);
             creatDamageZone(transform.position, explosionRadius);

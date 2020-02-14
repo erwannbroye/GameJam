@@ -90,7 +90,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 100
   m_Sprite: {fileID: 21300000, guid: 01f2715068a32f44a99ba474fbf74cdf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -128,10 +128,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 822694decd5c8b94d990c1d7ccdcec02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletForce: 0
+  bulletDamge: 10
+  additionalDamage: 20
+  bulletLevel: 0
   origin: {x: 0, y: 0, z: 0}
   target: {x: 0, y: 0, z: 0}
   maxHeight: 10
   t: 0
   gravity: 10
   isMoving: 0
+  typeBullet: 0
+  explosionRadius: 0.5
+  efxClips: []

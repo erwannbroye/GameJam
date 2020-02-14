@@ -5,14 +5,16 @@ using UnityEngine;
 public class motherBaseComponent : MonoBehaviour
 {
     public int aliveTower;
-    // public Tower [] Towers;
+    public HitCannon [] Towers;
     public int level = 1;
     public IaShoot shooter;
+    public HitCannon healthBar;
     
         // Start is called before the first frame update
     void Start()
     {
         setLevel(1);
+        healthBar.canDamage = false;
     }
 
     void setLevel(int nlevel) {
@@ -34,7 +36,12 @@ public class motherBaseComponent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+        if (Towers[0].repair && Towers[1].repair && Towers[1].repair && Towers[3].repair)
+            healthBar.canDamage = true;
+        else
+            healthBar.canDamage = false;
+
     }
    
 }

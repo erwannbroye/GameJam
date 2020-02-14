@@ -15,6 +15,8 @@ public class IaShoot : MonoBehaviour
     float cPrime;
     Vector2 deltaV ;
     float t ;
+    bool canFire = false;
+    public AudioClip [] efxClips;
 
     void Start()
     {
@@ -25,16 +27,26 @@ public class IaShoot : MonoBehaviour
     void Update()
     {
         float T = Time.time - T0;
-            if (T > reloadTime) {
+            if (T > reloadTime && canFire) {
                 T0 = Time.time;
+                int tmp = Mathf.RoundToInt(Random.Range(0, 1));
+                GetComponent<AudioSource>().PlayOneShot(efxClips[tmp], 1f);
                 Shoot(0);
             }
         designPos();
     }
     private void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log(other.tag);
-        if (other.tag == "Player")
+        if (other.tag == "Player") {
             T0 = Time.time;
+            canFire = true;
+        }
+    }
+
+    private void OntriggerExit(Collider2D other) {
+        if (other.tag == "Player") {
+            T0 = Time.time;
+            canFire = false;
+        }
     }
 
     private void OnTriggerStay2D(Collider2D other) {

@@ -19,6 +19,7 @@ public class coinComponent : MonoBehaviour
     public Level level;
     void Start()
     {
+        level = GameObject.Find("Player").GetComponent<Level>();
         rayon = 100;
         mousePos2 = transform;
         Vector3 tar = transform.position + new Vector3(1 + Random.Range(-2f, 2f), 1 + Random.Range(-2f, 2f), 0);

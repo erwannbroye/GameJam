@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class HitCannon : MonoBehaviour
 {
     public GameObject Bullet;
+    public GameObject coinPrefab;
+
     
     public float MaxHealth = 100f;
     public float CurrentHealth = 100f;
@@ -16,6 +18,8 @@ public class HitCannon : MonoBehaviour
     public float CurrentUpgrade = 0f;
     public float RegenRepair = 5f;
     public Image UpgradeBar;
+    public AudioClip [] efxClips;
+
 
    
     private bool isBurning;
@@ -23,20 +27,27 @@ public class HitCannon : MonoBehaviour
     private float BurningStopTime;
 
 
-    private bool repair = false;
+    public bool repair = false;
     private bool upgrading = true;
-    private int Level = 0;
+    public int Level = 0;
+    public bool canDamage = true;
+    int i = 0;
 
 
     public void TakeDamages (float damageTaken)
     {
-        CurrentHealth -= damageTaken;
-        if(CurrentHealth <= 0)
-        {
-            upgrading = false;
-            CurrentUpgrade = 0;
-            repair = true;
-            CurrentHealth = 0;
+        if (canDamage) {
+            CurrentHealth -= damageTaken;
+            if(CurrentHealth <= 0 && upgrading == true)
+            {
+                upgrading = false;
+                CurrentUpgrade = 0;
+                repair = true;
+                CurrentHealth = 0;
+                for (int i = 0; i < 10; i++) {
+                    GameObject bullet = Instantiate(coinPrefab, transform.position, transform.rotation);
+                }
+            }
         }
         
         
@@ -54,7 +65,7 @@ public class HitCannon : MonoBehaviour
 
     public void TowerUpgrade()
     {
-        CurrentUpgrade += RegenRepair * Time.deltaTime;
+        CurrentUpgrade += RegenRepair * Time.deltaTime / 2;
         
 
         if (CurrentUpgrade >=100f)
@@ -64,6 +75,9 @@ public class HitCannon : MonoBehaviour
                 Level += 1;
                 Debug.Log("Level up " + Level);
                 CurrentUpgrade = 0;
+                CurrentHealth *= 1.5f;
+                MaxHealth *= 1.5f;
+                GetComponentInChildren<IaShoot>().reloadTime -= 0.5f;
             }
             
         }
@@ -89,6 +103,19 @@ public class HitCannon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+         
+        if (CurrentHealth > 10)
+            i =0;
+        if (CurrentHealth <= 0) {
+            CurrentHealth = 0;
+            int tmp = Mathf.RoundToInt(Random.Range(0, 2));
+            if (i == 0) {
+                GetComponent<AudioSource>().PlayOneShot(efxClips[tmp], 1f);
+                GetComponent<AudioSource>().PlayOneShot(efxClips[3], 1f);
+
+            }
+            i = 1;
+        }
         if (repair)
         {
             RegenHealth();
@@ -102,6 +129,8 @@ public class HitCannon : MonoBehaviour
        
         if (CurrentUpgrade >= 100)
         {
+            int tmp = Mathf.RoundToInt(Random.Range(2, 3));
+            GetComponent<AudioSource>().PlayOneShot(efxClips[tmp], 1f);
             CurrentUpgrade = 100;
         }
 

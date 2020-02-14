@@ -16,6 +16,7 @@ public class shooting : MonoBehaviour
     public Vector2 deltaV ;
     float t ;
     float T0;
+    public AudioClip [] efxClips;
 
 
     public Level level;
@@ -32,21 +33,35 @@ public class shooting : MonoBehaviour
         canFire = true;
 
     }
-    void FixedUpdate()
+    void Update()
     {
-        float T = Time.time - T0;
+        T0 += Time.deltaTime;
         rayon = level.range;
         playePos = transform.position;
         mousePos2 = cam.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetButtonUp("Fire1") && canFire == true) {
             for (int i = level.bulletNumber - 1; i >= 0; i --) {
                 Shoot(i);
+                if (level.canonLevel == 1) {
+                    int tmp = Mathf.RoundToInt(Random.Range(0, 1));
+                    GetComponent<AudioSource>().PlayOneShot(efxClips[tmp], 1f);
+                }
+                if (level.canonLevel == 2) {
+                    int tmp = Mathf.RoundToInt(Random.Range(2, 3));
+                     GetComponent<AudioSource>().PlayOneShot(efxClips[tmp], 1.0f);
+                }
             }
             canFire = false;
-            T0 = Time.time;
-            T = Time.time - T0;
+            Debug.Log("BITE");
+            T0 = 0;
+        } else if (Input.GetButtonUp("Fire1") && canFire == false) {
+            int tmp = Mathf.RoundToInt(Random.Range(4, 5));
+            GetComponent<AudioSource>().PlayOneShot(efxClips[tmp], 1.0f);
         }
-        if (T > level.reloadTime && canFire == false)
+        // Debug.Log(T0);
+        // Debug.Log(canFire);
+        // Debug.Log(level.reloadTime);
+        if (T0 > level.reloadTime && canFire == false)
             canFire = true;
         designPos();
     }
